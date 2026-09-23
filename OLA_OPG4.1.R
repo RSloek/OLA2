@@ -186,10 +186,7 @@ ff96$DI_Indikator <- (ff96$`F2 Familiens økonomiske situation i dag, sammenlign
 ) / 4
 ff96 <- relocate(ff96, DI_Indikator, .after = 1)
 
-#prøv med for loop===========================================================.
-
-ff96[,i]
-
+#Data transformation=========================================================.
 pfgk <- pfgk[pfgk$TID >= as.Date("2000-01-01"),]
 pfgk_wide <- pivot_wider(pfgk, names_from = FORMAAAL, values_from = `Mio. kr.`)
 
@@ -197,7 +194,9 @@ lmdata <- inner_join(pfgk_wide, ff96[,1:3])
 lmdata <- relocate(lmdata, DI_Indikator, .after = 1)
 lmdata <- relocate(lmdata, `F1 Forbrugertillidsindikatoren`, .after = 1)
 
-Resultater <- list()
+
+#Gemmer summary i liste======================================================.
+resultater <- list()
 
 for (i in 5:ncol(lmdata)) {
   navn <- names(lmdata)[i]
@@ -205,10 +204,23 @@ for (i in 5:ncol(lmdata)) {
   DST_lm <- summary(lm(lmdata$`F1 Forbrugertillidsindikatoren` ~ lmdata[[i]]))
   DI_lm <- summary(lm(lmdata$DI_Indikator ~ lmdata[[i]]))
   
-  Resultater[[navn]] <- list(
+  resultater[[navn]] <- list(
     DST_lm = DST_lm,
     DI_lm  = DI_lm
   )
 }
+
+
+#laver df om R^2=============================================================.
+r2_df <- data.frame(
+  kolonne = names(resultater),
+  DST_r2  = sapply(resultater, function(x) x$DST_lm$r.squared),
+  DI_r2   = sapply(resultater, function(x) x$DI_lm$r.squared),
+  row.names = NULL
+)
+
+View(r2_df)
+
+
 
 
