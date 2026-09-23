@@ -190,19 +190,25 @@ ff96 <- relocate(ff96, DI_Indikator, .after = 1)
 
 ff96[,i]
 
-pfgk <- pfgk[pfgk$TID >= as.Date("1996-01-01"),]
+pfgk <- pfgk[pfgk$TID >= as.Date("2000-01-01"),]
 pfgk_wide <- pivot_wider(pfgk, names_from = FORMAAAL, values_from = `Mio. kr.`)
 
 lmdata <- inner_join(pfgk_wide, ff96[,1:3])
 lmdata <- relocate(lmdata, DI_Indikator, .after = 1)
 lmdata <- relocate(lmdata, `F1 Forbrugertillidsindikatoren`, .after = 1)
 
-for (i in 5:ncol(lmdata)) {
-  summary(lm(lmdata$`F1 Forbrugertillidsindikatoren` ~ lmdata[,i]))
-  summary(lm(lmdata$DI_Indikator ~ lmdata[,i]))
-}
-summary(lm(lmdata$`F1 Forbrugertillidsindikatoren` ~ lmdata$`Fødevarer mv.`))
+Resultater <- list()
 
-typeof()
+for (i in 5:ncol(lmdata)) {
+  navn <- names(lmdata)[i]
+  
+  DST_lm <- summary(lm(lmdata$`F1 Forbrugertillidsindikatoren` ~ lmdata[[i]]))
+  DI_lm <- summary(lm(lmdata$DI_Indikator ~ lmdata[[i]]))
+  
+  Resultater[[navn]] <- list(
+    DST_lm = DST_lm,
+    DI_lm  = DI_lm
+  )
+}
 
 
