@@ -13,7 +13,7 @@ library(ggplot2)
 # ============================================
 
 # ---- 1) DI-FTI: hent og aggreger til kvartal --------------------------------
-FORV1meta <- dst_meta(table = "FORV1", lang = "da", col_names = FALSE)
+FORV1meta <- dst_meta(table = "FORV1", col_names = FALSE)
 FORV1meta$values$INDIKATOR$text
 
 FORV1meta_filters <- list(
