@@ -109,7 +109,8 @@ ggplot(ff96, aes(x = TID, y = `F1 Forbrugertillidsindikatoren`)) +
     title = "DST's forbrugertillidsindikator, 1996-i dag",
     subtitle = "Kvartalsvise værdier",
     x = "År",
-    y = "DST's forbrugertillidsindikator"
+    y = "DST's forbrugertillidsindikator",
+    caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   geom_line(linewidth = 1) 
@@ -123,10 +124,11 @@ ggplot(ff96, aes(x = TID, y = `F9 Anskaffelse af større forbrugsgoder, fordelag
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   geom_line() +
-  geom_hline(yintercept = mean(ff96$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)) +
+  geom_hline(yintercept = 0) +
   labs(
     title = "DST's forbrugertillidsindikator, 1996-i dag",
     subtitle = "Kvartalsvise værdier",
+    caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) 
 
 #4.3=========================================================================
@@ -145,7 +147,8 @@ ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.`, fill = reo
   labs(
     title = "Husholdningernes forbrug fordelt på formål, 2025",
     subtitle = "Mio. kr., kædede 2020-priser",
-    x = NULL, y = "Mio. kr."
+    x = NULL, y = "Mio. kr.",
+    caption = "Kilde: Danmarks Statistik, tabel NAHC021."
   ) +
   theme_minimal() +
   guides(fill = "none")
@@ -169,7 +172,8 @@ ggplot(plotdf, aes(x = reorder(FORMAAAL, Diff_procent), y = Diff_procent, fill =
     title = "Husholdningernes forbrug fordelt på formål: ændring 2023Q2–2026Q2",
     subtitle = "Procentvis ændring i forbrug, kædede 2020-priser",
     x = NULL,
-    y = "Ændring i forbrug (%)"
+    y = "Ændring i forbrug (%)",
+    caption = "Kilde: Danmarks Statistik, tabel NKHC021."
   ) +
   theme_minimal() +
   guides(fill = "none")
