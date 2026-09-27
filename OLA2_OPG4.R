@@ -113,26 +113,78 @@ ggplot(ff96, aes(x = TID, y = `F1 Forbrugertillidsindikatoren`)) +
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_line(linewidth = 1) 
+  geom_line(linewidth = 1.08) 
 
-#4.2 yap med mennesker=======================================================
-mean(ff96$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)
-ggplot(ff96, aes(x = TID, y = `F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)) +
+#4.2=========================================================================
+ff00 <- ff96[ff96$TID >= as.Date("2000-01-01"),]
+
+mean(ff00$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)
+summary(ff00$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)[c(1,3,4,6)]
+
+
+
+ggplot(ff00, aes(x = TID, y = `F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`)) +
   scale_x_date(
     date_breaks = "2 years",
     labels = function(x) paste0(format(x, "%Y"), " Q", (as.numeric(format(x, "%m")) - 1) %/% 3 + 1)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  geom_line() +
   geom_hline(yintercept = 0) +
+  geom_hline(yintercept = mean(ff00$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`), 
+             colour = "red", 
+             linetype = "dashed") +
+  annotate("text", 
+           x = as.Date("2023-06-01"), 
+           y = mean(ff00$`F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`) + 2, 
+           label = "Gennemsnit", 
+           color = "red", 
+           hjust = 0, 
+           size = 3.5) +
+  geom_line(linewidth = 1.08) +
   labs(
-    title = "DST's forbrugertillidsindikator, 1996-i dag",
-    subtitle = "Kvartalsvise værdier",
+    title = "Fordelagtighed ved at anskaffe større forbrugsgoder, 2000-i dag",
+    subtitle = "Kvartalsvise værdier med streg for gennemsnittet",
+    x = "År",
+    y = "Nettotal",
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) 
 
+
+ggplot(ff00, aes(x = TID)) +
+  geom_line(aes(y = `F1 Forbrugertillidsindikatoren`, 
+                color = "Forbrugertillidsindikatoren"), 
+            linewidth = 1.08) +
+  geom_line(aes(y = `F9 Anskaffelse af større forbrugsgoder, fordelagtigt for øjeblikket`, 
+                color = "Anskaffelse af forbrugsgoder (fordelagtigt)"), 
+            linewidth = 1.08) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  scale_x_date(
+    date_breaks = "2 years",
+    labels = function(x) paste0(format(x, "%Y"), " Q", (as.numeric(format(x, "%m")) - 1) %/% 3 + 1)
+  ) +
+  scale_color_manual(
+    values = c(
+      "Forbrugertillidsindikatoren" = "black",
+      "Anskaffelse af forbrugsgoder (fordelagtigt)" = "steelblue"
+    )
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  ) +
+  labs(
+    title = "Forbrugertillid vs. holdning til forbrugsgoder",
+    subtitle = "Kvartalsvise værdier, 1996-i dag",
+    x = "År",
+    y = "Nettotal",
+    color = NULL,
+    caption = "Kilde: Danmarks Statistik, tabel FORV1."
+  )
+
+
 #4.3=========================================================================
-#===============================hvad skal jeg samligne når vi skal sammenligne år??????????????????????
+#======hvad skal jeg samligne når vi skal sammenligne år??????????????????????
 
 plotdf <- pfga[pfga$TID == as.Date("2025-01-01") & pfga$FORMAAAL != "I alt",]
 rownames(plotdf) <- NULL
