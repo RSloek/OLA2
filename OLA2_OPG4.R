@@ -278,5 +278,25 @@ r2_df <- data.frame(
 View(r2_df)
 
 
+r2_long <- rbind(
+  data.frame(Gruppe = r2_df$kolonne, R2 = r2_df$DST_r2, Indikator = "DST-FTI"),
+  data.frame(Gruppe = r2_df$kolonne, R2 = r2_df$DI_r2, Indikator = "DI-Indikator")
+)
 
+# Sorter grupperne efter DST's R2, så søjlerne fremstår i faldende rækkefølge
+raekkefolge <- r2_df$kolonne[order(-r2_df$DST_r2)]
+r2_long$Gruppe <- factor(r2_long$Gruppe, levels = rev(raekkefolge))
 
+ggplot(r2_long, aes(x = Gruppe, y = R2, fill = Indikator)) +
+  geom_col(position = "dodge") +
+  coord_flip() +
+  scale_fill_manual(values = c("DST-FTI" = "steelblue", "DI-Indikator" = "grey")) +
+  theme_bw() +
+  labs(
+    title = "Forklaringsgrad (R²) for DST vs. DI-indikatoren",
+    subtitle = "Simple lineære regressioner mod de 15 forbrugsgrupper",
+    x = NULL,
+    y = "R²",
+    fill = NULL,
+    caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1."
+  )
