@@ -108,7 +108,7 @@ ggplot(ff96, aes(x = TID, y = `F1 Forbrugertillidsindikatoren`)) +
   labs(
     title = "DST's forbrugertillidsindikator, 1996-i dag",
     subtitle = "Kvartalsvise værdier",
-    x = "År",
+    x = "Kvartal",
     y = "DST's forbrugertillidsindikator",
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) +
@@ -144,7 +144,7 @@ ggplot(ff00, aes(x = TID, y = `F9 Anskaffelse af større forbrugsgoder, fordelag
   labs(
     title = "Fordelagtighed ved at anskaffe større forbrugsgoder, 2000-i dag",
     subtitle = "Kvartalsvise værdier med streg for gennemsnittet",
-    x = "År",
+    x = "Kvartal",
     y = "Nettotal",
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) 
@@ -176,15 +176,15 @@ ggplot(ff00, aes(x = TID)) +
   labs(
     title = "Forbrugertillid vs. holdning til forbrugsgoder",
     subtitle = "Kvartalsvise værdier, 1996-i dag",
-    x = "År",
+    x = "Kvartal",
     y = "Nettotal",
     color = NULL,
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   )
 
 
-#4.3=========================================================================
-#======hvad skal jeg samligne når vi skal sammenligne år??????????????????????
+#4.3 ændre date her=========================================================================
+
 
 plotdf <- pfga[pfga$TID == as.Date("2025-01-01") & pfga$FORMAAAL != "I alt",]
 rownames(plotdf) <- NULL
@@ -275,7 +275,6 @@ r2_df <- data.frame(
   row.names = NULL
 )
 
-View(r2_df)
 
 
 r2_long <- rbind(
@@ -296,7 +295,7 @@ ggplot(r2_long, aes(x = Gruppe, y = R2, fill = Indikator)) +
     title = "Forklaringsgrad (R²) for DST vs. DI-indikatoren",
     subtitle = "Simple lineære regressioner mod de 15 forbrugsgrupper",
     x = NULL,
-    y = "R²",
+    y = "Forklaringsgrad (R²)",
     fill = NULL,
-    caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1."
+    caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1, 2000 Q1 - 2026 Q3."
   )
