@@ -275,6 +275,8 @@ merged_DST_fti_realvækst <- merged_DST_fti_realvækst %>%
 #residualer_di <- residuals(model_di_fti)
 #residualer_dst <- residuals(model_dst_fti)
 
+#Individuelle plots for DI og DST
+
 # Plot residualer for DI-FTI
 ggplot(merged_di_fti_realvækst,
        aes(x = fitted_manuelt, y = residual)) +
@@ -307,15 +309,17 @@ ggplot(merged_DST_fti_realvækst,
 ggplot() +
   
   # Residualer for DI-FTI
-  geom_line(
+  geom_point(
     data = merged_di_fti_realvækst,
-    aes(x = kvartal, y = residual, group = 1, color = "DI-FTI")
+    aes(x = kvartal, y = residual, group = 1, color = "DI-FTI"),
+    position = "dodge"
   ) +
   
   # Residualer for DST-FTI
-  geom_line(
+  geom_point(
     data = merged_DST_fti_realvækst,
-    aes(x = kvartal, y = residual, group = 1, color = "DST-FTI")
+    aes(x = kvartal, y = residual, group = 1, color = "DST-FTI"),
+    position = "dodge"
   ) +
   
   # Vandret linje ved residual = 0
@@ -325,10 +329,12 @@ ggplot() +
   ) +
   
   labs(
-    title = "Residualer over tid - DI-FTI og DST-FTI",
+    title = "Modellens præcision varierer over tid",
+    subtitle = "I nogle perioder ligger estimaterne tæt på den faktiske realvækst, mens den \ni andre perioder afviger markant mere.",
     x = "Kvartal",
-    y = "Residual",
-    color = "Model"
+    y = "Residualer",
+    color = "Model",
+    caption = "Kilde: Egen tilvirkning efter data fra DST"
   ) +
   
   theme_minimal() +
@@ -336,7 +342,7 @@ ggplot() +
   # Vis kun nogle af kvartalerne på x-aksen
   scale_x_discrete(
     breaks = merged_di_fti_realvækst$kvartal[
-      seq(1, nrow(merged_di_fti_realvækst), by = 8)
+      seq(1, nrow(merged_di_fti_realvækst), by = 4)
     ]
   ) +
   
@@ -344,19 +350,18 @@ ggplot() +
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
 
-#Lav plot over tid: line plot
 
-#Noter til at forstå plot
-#I begge plots er den stiplede linje ved 0 referencen:
-#Punkt over 0 → den faktiske realvækst var højere end modellen estimerede → modellen underestimerede.
-#Punkt under 0 → den faktiske realvækst var lavere end modellen estimerede → modellen overestimerede.
-#Jo længere et punkt er fra 0, desto større fejl lavede modellen for den observation.
+# Noter til at forstå plottet
+# Den stiplede linje ved 0 er referencen:
+# Punkt over 0 → den faktiske realvækst var højere end modellen estimerede → modellen underestimerede.
+# Punkt under 0 → den faktiske realvækst var lavere end modellen estimerede → modellen overestimerede.
+# Jo længere et punkt er fra 0, desto større fejl lavede modellen for den observation.
 
-#Konklusion
-# Residualplottene viser forskellen mellem den faktiske og den estimerede årlige realvækst for hvert kvartal.
-# I begge modeller ligger residualerne både over og under 0.
-# Der er dog også observationer med relativt store residualer,
-# hvilket viser, at modellerne ikke kan forklare al variationen i realvæksten.
+# Konklusion
+# Residualerne ligger både over og under 0 i begge modeller.
+# Størrelsen på residualerne varierer dog over tid, og der er perioder,
+# hvor modellerne rammer væsentligt længere fra den faktiske realvækst.
+# Modellernes præcision er dermed ikke konstant over tid.
 
 # ============================================================
 # Opgave 3.3 - Beregn RSS og TSS
