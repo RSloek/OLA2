@@ -192,7 +192,7 @@ rownames(plotdf) <- NULL
 
 
 
-ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.`, fill = reorder(FORMAAAL, `Mio. kr.`))) +
+ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.`)) +
   geom_col() +
   coord_flip() +
   scale_y_continuous(labels = label_number(big.mark = ".", decimal.mark = ",")) +
@@ -217,7 +217,7 @@ plotdf <- data.frame(
 )
 plotdf$Diff_procent <- ((plotdf$veardi26q2 / plotdf$veardi23q2) - 1) * 100
 
-ggplot(plotdf, aes(x = reorder(FORMAAAL, Diff_procent), y = Diff_procent, fill = reorder(FORMAAAL, Diff_procent))) +
+ggplot(plotdf, aes(x = reorder(FORMAAAL, Diff_procent), y = Diff_procent)) +
   geom_col() +
   coord_flip() +
   labs(
