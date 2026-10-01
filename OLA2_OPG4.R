@@ -109,7 +109,7 @@ ggplot(ff96, aes(x = TID, y = `F1 Forbrugertillidsindikatoren`)) +
     title = "DST's forbrugertillidsindikator, 1996-i dag",
     subtitle = "Kvartalsvise værdier",
     x = "Kvartal",
-    y = "DST's forbrugertillidsindikator",
+    y = "DST-FTI",
     caption = "Kilde: Danmarks Statistik, tabel FORV1."
   ) +
   geom_hline(yintercept = 0, linetype = "dashed") +
@@ -192,14 +192,14 @@ rownames(plotdf) <- NULL
 
 
 
-ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.`)) +
+ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.` / 1000)) +
   geom_col(fill = "steelblue") +
   coord_flip() +
   scale_y_continuous(labels = label_number(big.mark = ".", decimal.mark = ",")) +
   labs(
-    title = "Husholdningernes forbrug fordelt på formål, 2025",
-    subtitle = "Mio. kr., kædede 2020-priser",
-    x = NULL, y = "Mio. kr.",
+    title = "Danskerne brugte flest penge på boligbenyttelse i 2025",
+    subtitle = "Husholdningernes forbrug fordelt på formål - Mia. kr., kædede 2020-priser",
+    x = NULL, y = "Mia. kr.",
     caption = "Kilde: Danmarks Statistik, tabel NAHC021."
   ) +
   theme_minimal() +
@@ -221,8 +221,8 @@ ggplot(plotdf, aes(x = reorder(FORMAAAL, Diff_procent), y = Diff_procent)) +
   geom_col(fill = "steelblue") +
   coord_flip() +
   labs(
-    title = "Husholdningernes forbrug fordelt på formål: ændring 2023Q2–2026Q2",
-    subtitle = "Procentvis ændring i forbrug, kædede 2020-priser",
+    title = 'Gruppen af forbruget der steg mest fra 2023Q2\ntil 2026Q2 er "Køb af køretøjer"',
+    subtitle = "Husholdningernes forbrug fordelt på formål: ændring 2023Q2–2026Q2.\nProcentvis ændring i forbrug, kædede 2020-priser.",
     x = NULL,
     y = "Ændring i forbrug (%)",
     caption = "Kilde: Danmarks Statistik, tabel NKHC021."
