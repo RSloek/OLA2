@@ -265,5 +265,3 @@ genopretning[, c("gns_2020", "laveste_2020", "gns_2021", "hoejeste_2021")] <- ro
 rownames(genopretning) <- NULL
 genopretning
 
-cat("Svar 5.4:", landenavn[names(corona_sorteret)[1]], "har den laveste gennemsnitlige kvartalsvise årlige realvækst fra 1. kvartal 2020 til", kvartal_navn(max(vaekst_bred$time)),
-    "(", format(round(corona_sorteret[1], 2), nsmall = 2, decimal.mark = ","), "%).\n")
