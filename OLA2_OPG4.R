@@ -193,7 +193,7 @@ rownames(plotdf) <- NULL
 
 
 ggplot(plotdf, aes(x = reorder(FORMAAAL, `Mio. kr.`), y = `Mio. kr.`)) +
-  geom_col() +
+  geom_col(fill = "steelblue") +
   coord_flip() +
   scale_y_continuous(labels = label_number(big.mark = ".", decimal.mark = ",")) +
   labs(
@@ -218,7 +218,7 @@ plotdf <- data.frame(
 plotdf$Diff_procent <- ((plotdf$veardi26q2 / plotdf$veardi23q2) - 1) * 100
 
 ggplot(plotdf, aes(x = reorder(FORMAAAL, Diff_procent), y = Diff_procent)) +
-  geom_col() +
+  geom_col(fill = "steelblue") +
   coord_flip() +
   labs(
     title = "Husholdningernes forbrug fordelt på formål: ændring 2023Q2–2026Q2",
@@ -279,7 +279,7 @@ r2_df <- data.frame(
 
 r2_long <- rbind(
   data.frame(Gruppe = r2_df$kolonne, R2 = r2_df$DST_r2, Indikator = "DST-FTI"),
-  data.frame(Gruppe = r2_df$kolonne, R2 = r2_df$DI_r2, Indikator = "DI-Indikator")
+  data.frame(Gruppe = r2_df$kolonne, R2 = r2_df$DI_r2, Indikator = "DI-FTI")
 )
 
 # Sorter grupperne efter DST's R2, så søjlerne fremstår i faldende rækkefølge
@@ -289,13 +289,18 @@ r2_long$Gruppe <- factor(r2_long$Gruppe, levels = rev(raekkefolge))
 ggplot(r2_long, aes(x = Gruppe, y = R2, fill = Indikator)) +
   geom_col(position = "dodge") +
   coord_flip() +
-  scale_fill_manual(values = c("DST-FTI" = "steelblue", "DI-Indikator" = "grey")) +
+  scale_fill_manual(values = c("DST-FTI" = "steelblue", "DI-FTI" = "grey")) +
   theme_bw() +
   labs(
-    title = "Forklaringsgrad (R²) for DST vs. DI-indikatoren",
+    title = "Forklaringsgrad (R²) for DST-FTI vs. DI-FTI",
     subtitle = "Simple lineære regressioner mod de 15 forbrugsgrupper",
     x = NULL,
     y = "Forklaringsgrad (R²)",
     fill = NULL,
     caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1, 2000 Q1 - 2026 Q3."
   )
+
+
+
+
+
