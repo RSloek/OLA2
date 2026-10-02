@@ -128,10 +128,14 @@ sammenligning <- data.frame(
   Forklaringsgrad = c(summary(model_di_fti)$r.squared, summary(model_dst_fti)$r.squared)
 )
 sammenligning
-#Konklusion, vi kan se at DI fortsat har en stærkere sammenhæng med den årlige realvækst i forbrug. 
-#da DI har i korr 0,6201 og en forr 0,3845 vs DST korr 0.5213 og Forr 0.2718
-#det er højere en DST på korr 0,5213 og forr 0,2718
-#korr og forr er faldet både for DI og DST. Der skal dog tages højde for at de tidligere tal, er regnet ud fra personlig forbrug, og vi her har regnet med husholdningernes forbrug -> argumenter for det valg i rapporten.
+
+# Konklusion: DI-FTI har fortsat den stærkeste sammenhæng med den årlige realvækst i forbrug.
+# DI: korr = 0,6201, R² = 0,3845
+# DST: korr = 0,5213, R² = 0,2718
+# DI's korrelation og forklaringsgrad er altså højere end DST's på begge mål.
+# Korr. og R² er faldet for begge ift. DI's oprindelige 2016-tal. Der skal dog tages højde for,
+# at de tidligere tal er regnet ud fra personligt forbrug, og vi her har regnet med
+# husholdningernes forbrug -> argumenter for det valg i rapporten.
 
 
 # ============================================================
@@ -182,11 +186,11 @@ prediction_DST
 # Upr: Den øvre grænse for 95 % prediction-intervallet.
 
 # Konklusion:
-# DI-modellen forudsiger en årlig realvækst i husholdningernes forbrug på -0,28  %
-# i 2026Q3, med et prediction-interval fra -4,69 % til 3,99 %.
+# DI-modellen forudsiger en årlig realvækst i husholdningernes forbrug på -0,24 %
+# i 2026Q3, med et prediction-interval fra -4,62 % til 4,14 %.
 #
-# DST-modellen forudsiger en årlig realvækst på -0,80 %,
-# med et prediction-interval fra -5,55 % til 3,94 %.
+# DST-modellen forudsiger en årlig realvækst på -0,74 %,
+# med et prediction-interval fra -5,53 % til 4,06 %.
 #
 # Begge modeller forudsiger altså en svagt negativ realvækst i 2026Q3.
 # Prediction-intervallerne er dog brede og indeholder både negativ og positiv vækst,
@@ -200,7 +204,7 @@ prediction_DST
 # ============================================================
 
 # Begge modeller forudsiger en svagt negativ årlig realvækst i 2026Q3,
-# på henholdsvis -0,35 % for DI-FTI og -0,81 % for DST-FTI.
+# på henholdsvis -0,24 % for DI-FTI og -0,74 % for DST-FTI.
 # Det kan umiddelbart give anledning til bekymring for salget.
 
 # Forbruget har dog haft positiv årlig realvækst siden 2024Q2,
@@ -213,10 +217,10 @@ prediction_DST
 # vil falde, men predictionen kan ses som et tegn på en risiko for lavere
 # forbrugsvækst.
 
-#-0,35 % virker lidt overraskende efter en længere periode med positiv vækst, men: 
-#predictionen fortæller, hvad FTI-modellen alene siger, 
-#ikke nødvendigvis hvad den seneste udvikling i forbruget peger på. 
-#til det ville vi skulle lave en multipel regression hvor tidligere forbrugsvækst også bruges som forklarende variabel.
+# -0,24 % virker lidt overraskende efter en længere periode med positiv vækst, men:
+# predictionen fortæller, hvad FTI-modellen alene siger,
+# ikke nødvendigvis hvad den seneste udvikling i forbruget peger på.
+# til det ville vi skulle lave en multipel regression hvor tidligere forbrugsvækst også bruges som forklarende variabel.
 
 
 # ============================================================
@@ -271,7 +275,7 @@ merged_DST_fti_realvækst <- merged_DST_fti_realvækst %>%
     residual = Aarlig_realvækst - fitted_manuelt
   )
 
-#kan også løses med residuls()
+#kan også løses med residuals()
 #residualer_di <- residuals(model_di_fti)
 #residualer_dst <- residuals(model_dst_fti)
 
@@ -383,9 +387,9 @@ RSS_di
 RSS_dst
 TSS
 
-# TSS på 793,35 er den samlede variation i den årlige realvækst.
-# RSS_di på 488,27 er den del af variationen, som DI-modellen ikke kan forklare.
-# RSS_dst på 577,72 er den del af variationen, som DST-modellen ikke kan forklare.
+# TSS på 797,22 er den samlede variation i den årlige realvækst.
+# RSS_di på 499,20 er den del af variationen, som DI-modellen ikke kan forklare.
+# RSS_dst på 590,25 er den del af variationen, som DST-modellen ikke kan forklare.
 # Forskellen mellem TSS og RSS er dermed den variation, som modellen kan forklare.
 
 # ============================================================
@@ -399,8 +403,8 @@ R2_dst <- 1 - (RSS_dst / TSS)
 R2_di
 R2_dst
 
-# DI-modellen har en forklaringsgrad (R²) på 0,385, hvilket betyder, at modellen forklarer ca. 38,5 % af variationen i den årlige realvækst.
+# DI-modellen har en forklaringsgrad (R²) på 0,37, hvilket betyder, at modellen forklarer ca. 37 % af variationen i den årlige realvækst.
 
-# DST-modellen har en forklaringsgrad (R²) på 0,272 og forklarer dermed ca. 27,2 % af variationen i den årlige realvækst.
+# DST-modellen har en forklaringsgrad (R²) på 0,26 og forklarer dermed ca. 26 % af variationen i den årlige realvækst.
 
 # DI-FTI forklarer altså en større del af variationen i realvæksten end DST-FTI i vores modeller.
