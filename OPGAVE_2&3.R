@@ -166,7 +166,7 @@ DST_2026Q3 <- DST_fti_kvartal %>%
   filter(kvartal == "2026Q3") %>%
   select(DST_FTI)
 
-view(DST_2026Q)
+View(DST_2026Q3)
 
 # Lav prediction af årlig realvækst
 prediction_DST <- predict(
