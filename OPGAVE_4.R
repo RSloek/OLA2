@@ -297,7 +297,7 @@ ggplot(r2_long, aes(x = Gruppe, y = R2, fill = Indikator)) +
     x = NULL,
     y = "Forklaringsgrad (R²)",
     fill = NULL,
-    caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1, 2000 Q1 - 2026 Q3."
+    caption = "Kilde: Danmarks Statistik, tabel NKHC021 og FORV1, 2000 Q1 - 2026 Q2."
   )
 
 
