@@ -2,12 +2,7 @@ library(eurostat)
 library(ggplot2)
 
 # Vælg lande her (ved landekode): se Script/00_vaelg_lande.R, variablen "lande".
-source("Script/00_vaelg_lande.R")
-?stopifnot
-stopifnot("Åbn OLA2.Rproj (working directory skal være projektets rod)" = dir.exists("data/Rådata"))
-dir.create("data/Klar", showWarnings = FALSE)
-dir.create("Plots", showWarnings = FALSE)
-
+source("00_vaelg_lande.R")
 
 # 5.1 Kvartalsvis årlig realvækst i husholdningernes forbrugsudgift
 
@@ -20,7 +15,7 @@ get_eurostat_dic("unit")[get_eurostat_dic("unit")$code_name %in% c("CLV20_MEUR",
 get_eurostat_dic("s_adj")
 
 
-eu <- read.csv("data/Rådata/Eurostat_namq_10_fcs.csv", stringsAsFactors = FALSE)
+eu <- read.csv("Eurostat_namq_10_fcs.csv", stringsAsFactors = FALSE)
 eu$time <- as.Date(eu$time)
 eu <- eu[eu$geo %in% lande, ]
 stopifnot("Ingen data for de valgte lande: kør data/API/hent_Eurostat.R igen" = nrow(eu) > 0)
