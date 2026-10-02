@@ -18,12 +18,11 @@ get_eurostat_dic("s_adj")
 eu <- read.csv("Eurostat_namq_10_fcs.csv", stringsAsFactors = FALSE)
 eu$time <- as.Date(eu$time)
 eu <- eu[eu$geo %in% lande, ]
-stopifnot("Ingen data for de valgte lande: kør data/API/hent_Eurostat.R igen" = nrow(eu) > 0)
 head(eu)
 table(eu$geo)
 
 
-landekoder <- read.csv2("data/Rådata/Landekoder.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
+landekoder <- read.csv2("Landekoder.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
 landekoder$TITEL[landekoder$KODE == "NL"] <- "Holland"
 iso_kode <- function(x) ifelse(x == "EL", "GR", ifelse(x == "UK", "GB", x))
 
@@ -87,37 +86,23 @@ tegn_land <- function(k) {
   axis.Date(1, at = seq(as.Date("2000-01-01"), max(d$time), by = "1 year"), labels = FALSE, tcl = -0.3)   
 }
 
-
-gem_billede <- function(fil, bredde, hoejde, res, tegn) {
-  tryCatch(tegn(), error = function(e) {
-    message("Plots-panelet er for lille til at vise figuren. Den gemmes alligevel som billede i mappen Plots.")
-    try(graphics.off(), silent = TRUE)       
-  })                                                         
-  png(fil, width = bredde, height = hoejde, res = res)      
-  tegn()
-  dev.off()
-}
-
-# Ét plot pr. land
+# Ét plot pr. land (vises ét ad gangen i Plots-panelet, brug pilene til at bladre)
 for (k in lande_kode) {
-  land_figur <- function() {
-    par(mfrow = c(1, 1), mar = c(5, 5, 3, 1))
-    tegn_land(k)
-    mtext("Kilde: Eurostat, tabel namq_10_fcs Plot: Genereret i RStudios", side = 1, line = 4, adj = 1, cex = 0.8)
-  }
-  gem_billede(paste0("Plots/opg5_1_", k, ".png"), 2400, 1500, 220, land_figur)
+  par(mfrow = c(1, 1), mar = c(5, 5, 3, 1))
+  tegn_land(k)
+  mtext("Kilde: Eurostat, tabel namq_10_fcs Plot: Genereret i RStudios",
+        side = 1, line = 4, adj = 1, cex = 0.8)
 }
 
 # Alle landene i ét billede
 raekker <- ceiling(length(lande_kode) / 3)
-sammenligning <- function() {
-  par(mfrow = c(raekker, 3), mar = c(4.5, 4.5, 3, 1), oma = c(0, 0, 3, 0))
-  for (k in lande_kode) tegn_land(k)
-  mtext(paste0("Årlig realvækst i husholdningernes forbrug i ", length(lande_kode), " lande, 2000Q1 til dags dato"),
-        outer = TRUE, font = 2, cex = 1.3)
-}
-gem_billede("Plots/opg5_1_sammenligning.png", 3300, 900 * raekker, 250, sammenligning)
-try(par(mfrow = c(1, 1), oma = c(0, 0, 0, 0)), silent = TRUE)   
+par(mfrow = c(raekker, 3), mar = c(4.5, 4.5, 3, 1), oma = c(0, 0, 3, 0))
+for (k in lande_kode) tegn_land(k)
+mtext(paste0("Årlig realvækst i husholdningernes forbrug i ", length(lande_kode),
+             " lande, 2000Q1 til dags dato"),
+      outer = TRUE, font = 2, cex = 1.3)
+
+par(mfrow = c(1, 1), oma = c(0, 0, 0, 0))   
 
 kvartal_navn <- function(d) paste0(format(d, "%Y"), " Q", (as.numeric(format(d, "%m")) - 1) %/% 3 + 1)
 cat("Svar 5.1: Kvartalsvis årlig realvækst er beregnet for", length(lande_kode), "lande (", paste(lande_kode, collapse = ", "), ") fra",
@@ -147,7 +132,6 @@ ggplot(gns_data, aes(x = land, y = gns, fill = kode == names(gns_sorteret)[1])) 
        caption = "Kilde: Eurostat, tabel namq_10_fcs. Plot: Genereret i RStudios") +
   theme_minimal(base_size = 13) +
   theme(legend.position = "none", plot.title = element_text(face = "bold"))
-ggsave("Plots/opg5_gennemsnit.png", width = 9, height = 5)
 
 cat("Svar 5.2:", landenavn[names(gns_sorteret)[1]], "har den højeste gennemsnitlige kvartalsvise årlige realvækst (", format(round(gns_sorteret[1], 2), nsmall = 2, decimal.mark = ","),
     "%). Den laveste har", landenavn[names(gns_sorteret)[length(gns_sorteret)]], "(", format(round(gns_sorteret[length(gns_sorteret)], 2), nsmall = 2, decimal.mark = ","), "%).\n")
@@ -212,7 +196,6 @@ ggplot(laang3, aes(x = kode, y = gns, fill = type)) +
        caption = "Kilde: Eurostat, tabel namq_10_fcs. Plot: Genereret i RStudios.") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "top", plot.title = element_text(face = "bold"))
-ggsave("Plots/opg5_med_uden_corona.png", width = 10, height = 5.5)
 
 cat("Svar 5.3: Coronakrisen har haft størst effekt i", effekt$land[1], "- gennemsnittet stiger med",
     format(effekt$forskel[1], nsmall = 2, decimal.mark = ","), "procentpoint, når Coronakvartalerne fjernes (fra",
@@ -243,7 +226,6 @@ ggplot(gns_data4, aes(x = land, y = gns, fill = kode == names(corona_sorteret)[1
        caption = "Kilde: Eurostat, tabel namq_10_fcs Plot: Genereret i RStudios.") +
   theme_minimal(base_size = 13) +
   theme(legend.position = "none", plot.title = element_text(face = "bold"))
-ggsave("Plots/opg5_4_laveste_vaekst.png", width = 9, height = 5)
 
 
 a20 <- vaekst_bred[format(vaekst_bred$time, "%Y") == "2020", ]
