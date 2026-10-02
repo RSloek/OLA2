@@ -4,10 +4,6 @@ library(readr)
 library(stringr)
 library(ggplot2)
 
-stopifnot("Åbn OLA2.Rproj (working directory skal være projektets rod)" = dir.exists("data/Rådata"))
-dir.create("data/Klar", showWarnings = FALSE)
-dir.create("Plots", showWarnings = FALSE)
-
 
 # 1.1
 search <- dst_search(string = "befolkning", field = "text")
@@ -28,7 +24,7 @@ tail(meta$values$Tid)
 
 cat("1.2 Kategorivariabel")
 
-byer_raw <- read.csv("data/Rådata/DST_BY1.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
+byer_raw <- read.csv("DST_BY1.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
 head(byer_raw)
 nrow(byer_raw)
 
@@ -80,7 +76,6 @@ dst_bystoerrelser <- data.frame(
   min = c(0, 200, 250, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000),
   max = c(199, 249, 499, 999, 1999, 4999, 9999, 19999, 49999, 99999, 999999)
 )
-write.csv(dst_bystoerrelser, "data/Klar/DST_officiel_bystoerrelsesklassifikation.csv", row.names = FALSE)
 
 byer$bycat <- cut(byer$indbyggere,
                   breaks = c(-Inf, 1000, 5000, 20000, 100000, Inf),
@@ -101,29 +96,10 @@ kategori_tabel <- data.frame(
 )
 kategori_tabel
 
-# Tabellen som billede i Plots-panelet (gridExtra) og gemt som fil til Word
-library(gridExtra)
-library(grid)
-kategori_visning <- kategori_tabel
-names(kategori_visning) <- c("Kategori", "Indbyggere", "DST's klasser", "Antal byer")
-tabel_tema <- ttheme_minimal(
-  core    = list(fg_params = list(hjust = 0, x = 0.05, fontsize = 10)),
-  colhead = list(fg_params = list(hjust = 0, x = 0.05, fontsize = 10, fontface = "bold"),
-                 bg_params = list(fill = "#D9E2F3"))
-)
-grid.newpage()
-grid.table(kategori_visning, rows = NULL, theme = tabel_tema)
-
-png("Plots/kategori_tabel.png", width = 2200, height = 520, res = 300)
-grid.table(kategori_visning, rows = NULL, theme = tabel_tema)
-dev.off()
-
-write.csv(byer, "data/Klar/DST_byer_kategori.csv", row.names = FALSE)
-
 
 cat("1.3 Merge boligdata (OLA 1) med bycat")
 
-boliger <- read.csv("data/Rådata/Boliger_samlet.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
+boliger <- read.csv("Boliger_samlet.csv", stringsAsFactors = FALSE, encoding = "UTF-8")
 boliger$by_slug <- til_slug(boliger$by)
 
 mean(boliger$by_slug %in% byer$by_slug, na.rm = TRUE)
@@ -175,8 +151,6 @@ boliger_med_bycat <- merge(boliger, byer[, c("by_slug", "indbyggere", "bycat")],
 cat("Boliger med bycat:", sum(!is.na(boliger_med_bycat$bycat)), "af", nrow(boliger_med_bycat), "\n")
 head(sort(table(boliger_med_bycat$by_slug[is.na(boliger_med_bycat$bycat)]), decreasing = TRUE), 15)
 
-write.csv(boliger_med_bycat, "data/Klar/Boliger_med_bycat.csv", row.names = FALSE)
-
 
 cat("1.4 Plot\n")
 # Vi bruger medianen frem for gennemsnittet, da enkelte dyre boliger trækker
@@ -215,10 +189,6 @@ ggplot(plot_data, aes(x = bycat, y = median_kvmpris, fill = bycat)) +
   theme(legend.position = "none",
         plot.title = element_text(face = "bold"))
 
-ggsave("Plots/kvmpris_bytype.png", width = 9, height = 5.5)
-
-# Den merged dataframe (opgaven vil have både dataframe og plot): de første boliger
-# sorteret efter by, med pris, kvm-pris og bycat.
 merge_visning <- boliger_med_bycat[!is.na(boliger_med_bycat$by) & !is.na(boliger_med_bycat$bycat) &
                                    grepl("^[a-zæøå]", boliger_med_bycat$by),   # springer bynavne der starter med tal over
                                    c("by", "pris", "kvmpris", "bycat")]
@@ -240,13 +210,7 @@ merge_tema <- ttheme_minimal(
 grid.newpage()
 grid.table(merge_visning, rows = NULL, theme = merge_tema)
 
-png("Plots/merge_dataframe.png", width = 1500, height = 950, res = 300)
-grid.table(merge_visning, rows = NULL, theme = merge_tema)
-dev.off()
 
-# Top 3 byer pr. bytype: de dyreste byer (median kvm-pris) med mindst 10 boliger.
-# match_slug er den DST-by, boligen er matchet til. Pæne navne hentes fra DST.
-# Bydele i Hovedstadsområdet (fx Hellerup) indgår under deres kommunedel (Gentofte).
 pris  <- aggregate(kvmpris ~ match_slug + bycat, data = plot_raa, FUN = median)
 antal <- aggregate(kvmpris ~ match_slug + bycat, data = plot_raa, FUN = length)
 by_pris <- merge(pris, antal, by = c("match_slug", "bycat"))
@@ -269,6 +233,3 @@ top3_tabel
 grid.newpage()
 grid.table(top3_tabel, rows = NULL, theme = tabel_tema)
 
-png("Plots/top3_byer.png", width = 2200, height = 1500, res = 300)
-grid.table(top3_tabel, rows = NULL, theme = tabel_tema)
-dev.off()
